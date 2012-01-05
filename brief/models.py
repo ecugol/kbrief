@@ -10,11 +10,26 @@ AUDIENCE_TYPES = (
 
 MAKEUP_TYPES = (
 	('fixed', u'Жесткая лево/правосторонняя'),
+	('fixed-width', u"Жесткая только по ширине"),
+	('fixed-height', u"Жесткая только по высоте"),
+	('fixed-both', u"Жесткая и по ширине и по высоте"),
+	('fixed-center', u"Жесткая по центру"),
+	('fixed-center-width', u"Жесткая только по ширине (по центру)"),
+	('fixed-center-height', u"Жесткая только по высоте (по центру)"),
+	('fixed-center-both', u"Жесткая и по ширине и по высоте (по центру)"),
+	('fluid', u"Резиновая (растягивающаяся по размеру экрана монитора)"),
+	('ourchoice', u"Не имеет значения"),
+)
+
+LAYOUT_TYPES = (
+	('2col-left', u"Две колонки, сайдбар слева"),
+	('2col-right', u"Две колонки, сайдбар справа"),
+	('3col', u"Три колонки"),
 )
 
 class AudienceType(models.Model):
 	name = models.CharField(max_length=200)
-	type_of = models.ChoiceField(choices=AUDIENCE_TYPES)
+	type_of = models.IntegerField(choices=AUDIENCE_TYPES)
 
 	def __unicode__(self):
 		return u"%s (%s)" % (self.name, AUDIENCE_TYPES[self.type_of][1])
@@ -47,10 +62,12 @@ class ScreenResolution(models.Model):
 
 class Brief(models.Model):
 
+
+	# Contact info
 	contact_name = models.CharField(max_length=50)
 	contact_phone = models.CharField(max_length=20)
 	contact_email = models.EmailField()
-	contact_city = models.CharField()
+	contact_city = models.CharField(max_length=100, default=u"Сургут")
 	contact_address = models.TextField()
 
 	project_name = models.CharField(max_length=150)
@@ -96,6 +113,10 @@ class Brief(models.Model):
 	site_accent = models.ManyToManyField(SiteAccent)
 
 	screen_resolution = models.ManyToManyField(ScreenResolution)
+	makeup = models.CharField(max_length=50, choices=MAKEUP_TYPES, default='fixed-center')
+	layout = models.CharField(max_length=50, choices=LAYOUT_TYPES, default='2col-left')
+	layout_other = models.CharField(max_length=200, blank=True, null=True)
+
 
 
 class Competitor(models.Model):
@@ -115,3 +136,8 @@ class Companion(models.Model):
 	def __unicode__(self):
 		return u"%s: %s" % (self.brief.project_name, self.name)
 
+
+class LikedSite(models.Model):
+	brief = models.ForeignKey(Brief)
+	url = models.URLField()
+	desc = models.TextField(blank=True, null=True)
