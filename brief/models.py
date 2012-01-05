@@ -8,6 +8,10 @@ AUDIENCE_TYPES = (
 	(3, u"Другие"),
 )
 
+MAKEUP_TYPES = (
+	('fixed', u'Жесткая лево/правосторонняя'),
+)
+
 class AudienceType(models.Model):
 	name = models.CharField(max_length=200)
 	type_of = models.ChoiceField(choices=AUDIENCE_TYPES)
