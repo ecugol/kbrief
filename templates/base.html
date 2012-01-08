@@ -1,13 +1,11 @@
+{% load uni_form_tags %}
 <html>
 <head>
 	<title>Breif</title>
+    {% uni_form_setup %}
 </head>
 <body>
-{% if form %}
-<form action="." type="post">
-	{{ form.as_ul }}
-	<
-</form>
-{% endif %}
+{% block content %}
+{% endblock %}
 </body>
 </html>
